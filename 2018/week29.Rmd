@@ -1,0 +1,36 @@
+---
+title: "University Major & Income Data"
+output: html_notebook
+---
+
+My analysis of the 10-16-2018 dataset (College major data [FiveThirtyEight](FiveThirtyEight.com)).
+
+```{r, echo=FALSE}
+library("ggplot2")
+grad_data <- read.csv("~/tidytuesday/data/2018-10-16/recent-grads.csv")
+```
+
+```{r}
+summary(grad_data)
+head(grad_data)
+```
+
+Plot income by unemployment rate. One point on the plot per major. The size of the point indicates the number of students counted in the major. The color shows the proportion of women.
+
+```{r}
+minMedian = min(grad_data$Median)
+ggplot(grad_data,aes(x=Median,y=Unemployment_rate, color=ShareWomen, label=Major)) + 
+         geom_point(aes(size=Total)) +
+         xlim(minMedian, 130000) +
+         scale_colour_gradient(low = "blue", high = "pink") +
+         ggtitle("Median Income by Unemployment Rate for University Majors") + 
+         xlab("Median Income") + ylab("Unemployment Rate") +
+         geom_text(data=subset(grad_data, Median > 100000 & Unemployment_rate<.05),
+            nudge_y = .01,
+            aes(x=Median,y=Unemployment_rate,label=Major)) +
+         labs(size='Num People') +
+         NULL
+```
+
+
+Stretch goal: Group by Major category and re-plot
