@@ -1,0 +1,101 @@
+---
+title: "Week 19"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(rworldmap)
+library(ggthemes)
+```
+
+Read data
+
+```{r}
+student_ratio <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-05-07/student_teacher_ratio.csv")
+
+```
+
+Clean data
+
+```{r}
+
+med_ratios <- student_ratio %>% 
+  filter(!is.na(student_ratio)) %>%      # remove NAs
+  group_by(country_code, indicator) %>%
+  filter(year == max(year)) %>%          # grab the most recent data for each country and education level
+  ungroup() %>%
+  group_by(country_code, country) %>%
+  summarise(median_ratio = median(student_ratio)) 
+
+```
+
+Check names in med_ratios compared to map_data("world")
+```{r}
+anti_join(med_ratios, map_data("world"), by = c("country" = "region")) %>% View()
+```
+
+
+Need to recode some country names to match map_data 
+```{r}
+med_ratios_fixed <- med_ratios %>%
+  mutate(country = recode(country,
+                                "United States of America" = "USA",
+                                "Viet Nam" = "Vietnam",
+                                "British Virgin Islands" = "Virgin Islands",
+                                "United Republic of Tanzania" = "Tanzania",
+                                "Syrian Arab Republic" = "Syria",
+                                "Russian Federation" = "Russia",
+                                "Democratic People's Republic of Korea" = "North Korea",
+                                "The former Yugoslav Republic of Macedonia" = "Macedonia",
+                                "Republic of Moldova" = "Moldova",
+                                "Republic of Korea" = "South Korea",
+                                "Côte d'Ivoire" = "Ivory Coast",
+                                "Iran (Islamic Republic of)" = "Iran",
+                                "United Kingdom of Great Britain and Northern Ireland" = "UK",
+                                "Micronesia (Federated States of)" = "Micronesia",
+                                "Czechia" = "Czech Republic",
+                                "Cabo Verde" = "Cape Verde",
+                                "Congo" = "Democratic Republic of the Congo",
+                                "Brunei Darussalam" = "Brunei",
+                                "Bolivia (Plurinational State of)" = "Bolivia"))
+                                
+```
+
+Join median student teacher ratio data with map data
+
+```{r}
+my_map_data <- med_ratios_fixed %>%
+  full_join(map_data("world"), by = c("country" = "region")) %>% 
+  filter(!grepl("Antarctica",country)) #don't need Antarctica
+```
+
+
+Plot
+```{r}
+ggplot(my_map_data, aes(x = long, y = lat)) +
+     geom_polygon(aes(fill = median_ratio, group = group), color = "black", size = 0.2) +
+     scale_fill_gradient2(low = "dark blue", high = "red", midpoint = 17.428480) +
+     #dark_theme_gray() +
+     theme_fivethirtyeight() + 
+     theme(axis.line=element_blank(),
+           axis.text.x=element_blank(),
+           axis.text.y=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank()) +
+          #plot.background=element_blank()
+     labs(fill = "ratio",
+          title = "Median Student to Teacher Ratio",
+          caption = "Median student-to-teacher ratio is calculated for each country across all education levels (). Only the most recent data\nis used in the calculations. Countries shown in white have a median ratio close to the world median ratio. Countries\nshown in blue have a smaller ratio, while countries shown in red have a larger (less favorable) ratio. Countries shown in\ngrey are missing data.") 
+  
+```
+
+
+#TODO:
+
+* Why are some countries missing?
+* Use average instead of median?
+* Add education levels to caption.
+* Add some fonts?
+* ggrepel to highlight red country?
