@@ -87,10 +87,14 @@ ggplot(my_map_data, aes(x = long, y = lat)) +
           panel.grid.major=element_blank(),
           panel.grid.minor=element_blank()) +
      labs(fill = "ratio",
-          title = "Median Student to Teacher Ratio",
+          title = "Median Student to Teacher Ratios",
           caption = str_c(str_wrap("Median student-to-teacher ratio calculated across all education levels using the most recent data for each level. White indicates a median ratio close to the world median. Countries shown in blue have a smaller ratio, while countries shown in red have a larger (less favorable) ratio. Grey indicates missing data.", width = 120),"\nData Source: UNESCO\nVisualization: @AmandaRPlunkett")) 
   
 ```
 
 
-ggsave("studentTeacherRatios.png")
+
+```{r}
+ggsave("studentTeacherRatios.png", width = 7.4, height = 4.5, dpi = "retina")
+```
+
