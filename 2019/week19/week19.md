@@ -1,1 +1,0 @@
-!()\["R/studentTeacherRatios.png"\]
