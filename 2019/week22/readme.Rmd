@@ -1,0 +1,8 @@
+---
+title: "readme"
+author: "Amanda Plunkett"
+date: "5/26/2019"
+output: md_document
+---
+
+![](wine_tasting.png)
