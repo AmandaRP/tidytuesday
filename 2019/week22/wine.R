@@ -1,5 +1,4 @@
 library(tidyverse)
-library(ggridges)
 library(extrafont)
 
 #read data:
@@ -20,17 +19,8 @@ large_sample_countries <- wine_ratings %>%
 
 data4plotting <- inner_join(wine_ratings, large_sample_countries)
 
-#Played with ridges, but didn't seem very interesting:
-ggplot(data4plotting, aes(x = points, y = country, group = country)) +
-  geom_density_ridges() +
-  theme_ridges() 
-
-ggplot(data4plotting, aes(x = points, y = taster_twitter_handle, group = taster_twitter_handle)) +
-  geom_density_ridges() +
-  theme_ridges() 
-
 # Country vs Taster. Do some tasters give higher ratings in general than others?  
-data4plotting %>% 
+p <- data4plotting %>% 
   filter(!is.na(taster_name)) %>%
   group_by(taster_name, country) %>%
   summarize(med_cntry_taster_pnts = median(points), cnt_cntry_taster = n())  %>%
@@ -41,15 +31,28 @@ data4plotting %>%
   scale_colour_gradient(low = "white", high = "dark red") +
   theme_light() +
   labs(y = "Taster", 
-       x = "Country of Wine", 
+       x = "Wine Country", 
        title = "Wine Taster Rating Profile (by Country)",
        color = "Median Score",
        size = "Number of Reviews",
        caption = "Countries limited to those with atleast 1000 rated wines") +
-  theme(axis.text.x = element_text(angle = 45, hjust=1),
-        title = element_text(family = "Lato Semibold"))
+  theme(axis.text.x = element_text(angle = 45, hjust=1, size = 20),
+        axis.text.y = element_text(size = 20),
+        title = element_text(family = "satisfy", size = 36),
+        plot.caption = element_text(hjust = 0.5))
 
-  
+p
+
+ggsave("wine_tasting_satisfy.png", p, height = 4, width = 7)
+
+#Note: I had to use the showtext package (extrafonts didn't offer very many fonts 
+# and newly installed fonts didn't render... may be user error). 
+# Read more about showtext package here: 
+# https://cran.rstudio.com/web/packages/showtext/vignettes/introduction.html
+
+
+
+### Bonus code:
 
 #The following parallel plot looks cool, but I don't think it's as informative 
 # as the bubble plot.
