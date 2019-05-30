@@ -1,5 +1,5 @@
 library(tidyverse)
-library(extrafont)
+library(showtext)
 
 #read data:
 wine_ratings <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-05-28/winemag-data-130k-v2.csv")
@@ -18,6 +18,15 @@ large_sample_countries <- wine_ratings %>%
   filter(cnt >= 1000) #%>% View()
 
 data4plotting <- inner_join(wine_ratings, large_sample_countries)
+
+#Note: I had to use the showtext package (extrafonts didn't offer very many fonts 
+# and newly installed fonts didn't render... may be user error). 
+# Required copying and pasting code into terminal window.
+# Read more about showtext package here: 
+# https://cran.rstudio.com/web/packages/showtext/vignettes/introduction.html
+font_add_google("Satisfy", "satisfy")
+showtext_auto()
+
 
 # Country vs Taster. Do some tasters give higher ratings in general than others?  
 p <- data4plotting %>% 
@@ -39,17 +48,12 @@ p <- data4plotting %>%
   theme(axis.text.x = element_text(angle = 45, hjust=1, size = 20),
         axis.text.y = element_text(size = 20),
         title = element_text(family = "satisfy", size = 36),
-        plot.caption = element_text(hjust = 0.5))
+        plot.caption = element_text(hjust = 0.5),
+        legend.text = element_text(size = 18))
 
 p
 
-ggsave("wine_tasting_satisfy.png", p, height = 4, width = 7)
-
-#Note: I had to use the showtext package (extrafonts didn't offer very many fonts 
-# and newly installed fonts didn't render... may be user error). 
-# Read more about showtext package here: 
-# https://cran.rstudio.com/web/packages/showtext/vignettes/introduction.html
-
+ggsave("wine_tasting.png", p, height = 4, width = 7)
 
 
 ### Bonus code:
