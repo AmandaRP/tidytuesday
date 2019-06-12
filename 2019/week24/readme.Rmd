@@ -1,0 +1,9 @@
+---
+title: "readme"
+author: "Amanda Plunkett"
+date: "6/11/2019"
+output: md_document
+---
+
+![](meteoritemap.png)
+![](tsplot.png)
