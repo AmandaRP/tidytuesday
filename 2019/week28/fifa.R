@@ -16,7 +16,6 @@ more_codes <- countrycode::codelist_panel %>%
 wwc_outcomes_wcodes <- dplyr::left_join(wwc_outcomes, codes, by = "team") %>%
   select(year, team, score, country) %>%
   left_join(more_codes, by = c("team" = "ioc")) %>%
-  #mutate(score = as.double(score))
   mutate(year = as.character(year))
 #Fix England:
 wwc_outcomes_wcodes[wwc_outcomes_wcodes$country == "England", "iso2c"] <- "GB"
