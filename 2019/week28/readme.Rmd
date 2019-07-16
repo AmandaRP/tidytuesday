@@ -1,0 +1,13 @@
+---
+title: "readme"
+author: "Amanda Plunkett"
+date: "7/15/2019"
+output: md_document
+---
+
+![](goals.png)
+
+
+
+
+
