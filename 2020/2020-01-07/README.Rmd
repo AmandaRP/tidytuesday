@@ -1,0 +1,9 @@
+---
+title: "readme"
+author: "Amanda Peterson"
+date: "1/7/2020"
+output: md_document
+---
+
+![](tempAvgs.png)
+
