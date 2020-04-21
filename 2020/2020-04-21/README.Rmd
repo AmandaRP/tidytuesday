@@ -1,0 +1,17 @@
+---
+title: "readme"
+author: "Amanda Peterson"
+date: "4/21/2020"
+output: md_document
+---
+
+# GDPR
+
+The data this week comes from [SOURCE_OF_DATA](URL_TO_DATA). 
+
+This [ARTICLE_SOURCE](LINK_TO_ARTICLE) talks about SUBJECT TITLE in greater detail.
+
+Credit: [Amanda Peterson](https://twitter.com/DrAmandaRP)
+
+![](tempAvgs.png)
+
